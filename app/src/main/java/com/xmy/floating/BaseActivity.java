@@ -5,14 +5,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.*;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,9 +20,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import com.xmy.floating.floatlibrary.widget.FloatViewListener;
-import com.xmy.floating.floatlibrary.FloatWindowManager;
-import com.xmy.floating.floatlibrary.widget.IFloatView;
+import com.xmy.floating.dialog.DialogAssist;
+import com.xmy.floatlibrary.widget.FloatViewListener;
+import com.xmy.floatlibrary.FloatWindowManager;
+import com.xmy.floatlibrary.widget.IFloatView;
 
 /**
  * Description:Activity基类
@@ -32,8 +32,13 @@ import com.xmy.floating.floatlibrary.widget.IFloatView;
  * E-mail:duqian2010@gmail.com
  */
 public abstract class BaseActivity extends AppCompatActivity {
+
     protected Context mContext;
     protected View rootView;
+    private final int mRequestCode = 1024;
+    private RequestPermissionCallBack mRequestPermissionCallBack;
+    protected int floatWindowType = 0;
+    private FloatWindowManager floatWindowManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -103,8 +108,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     /***---------------------------float window start---------------------------**/
-    protected int floatWindowType = 0;
-    private FloatWindowManager floatWindowManager;
     private final Runnable floatWindowRunnable = new Runnable() {
         @Override
         public void run() {
@@ -117,7 +120,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void showFloatWindow() {
         closeFloatWindow();//如果要显示多个悬浮窗，可以不关闭，这里只显示一个
-        floatWindowManager.showFloatWindow(this, floatWindowType);
+
+        ImageView floatView = new ImageView(this);
+        floatView.setImageResource(R.mipmap.float_bg);
+        //floatView.setBackgroundColor(Color.parseColor("#FF00FF"));
+        floatView.setLayoutParams(new ViewGroup.LayoutParams(150, 150));
+
+        floatWindowManager.showFloatWindow(this, floatWindowType, floatView);
         addFloatWindowClickListener();
     }
 
@@ -186,18 +195,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void checkPermissionAndShow() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
-            // 授权提示
-            new AlertDialog.Builder(mContext).setTitle("悬浮窗权限未开启")
-                    .setMessage("你的手机没有授权" + mContext.getString(R.string.app_name) + "获得悬浮窗权限，视频悬浮窗功能将无法正常使用")
-                    .setPositiveButton("开启", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // 显示授权界面
-                            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
-                        }
-                    })
-                    .setNegativeButton("取消", null).show();
-
+            DialogAssist.getIncetanse().overlayPermission(this);
         } else {
             showFloatWindowDelay();
         }
@@ -214,9 +212,6 @@ public abstract class BaseActivity extends AppCompatActivity {
             closeFloatWindow();
         }
     }
-
-    private final int mRequestCode = 1024;
-    private RequestPermissionCallBack mRequestPermissionCallBack;
 
     /**
      * 权限请求结果回调

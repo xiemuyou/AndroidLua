@@ -3,7 +3,7 @@ package com.xmy.floating.activity;
 import android.view.View;
 import android.widget.TextView;
 import com.xmy.floating.BaseActivity;
-import com.xmy.floating.floatlibrary.FloatWindowManager;
+import com.xmy.floatlibrary.FloatWindowManager;
 import com.xmy.floating.R;
 
 /**

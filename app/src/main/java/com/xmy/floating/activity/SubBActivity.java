@@ -5,7 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.xmy.floating.BaseActivity;
-import com.xmy.floating.floatlibrary.FloatWindowManager;
+import com.xmy.floatlibrary.FloatWindowManager;
 import com.xmy.floating.R;
 
 /**

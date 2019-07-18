@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.xmy.floating.activity.SubAActivity;
-import com.xmy.floating.floatlibrary.FloatWindowManager;
+import com.xmy.floatlibrary.FloatWindowManager;
 
 /**
  * description:Demo展示用法。todo 目前发现显示actionBar的情况下缩放有bug
