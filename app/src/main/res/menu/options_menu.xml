@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      tools:ignore="MissingDefaultResource">
+
+    <item android:id="@+id/navigation_A" android:title="应用内悬浮窗，只能在父view中移动和缩放,缩放不存在兼容性问题"
+          android:icon="@mipmap/ic_launcher"/>
+
+    <item android:id="@+id/navigation_B" android:title="WM实现，无需权限，targetSDK必须小于25，不能在桌面显示"
+          android:icon="@mipmap/ic_launcher"/>
+
+    <item android:id="@+id/navigation_C" android:title="window Manager实现，需权限，退出应用，可在桌面显示，缩放存在兼容性问题"
+          android:icon="@mipmap/ic_launcher"/>
+</menu>
