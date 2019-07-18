@@ -172,7 +172,8 @@ public class FloatWinPermissionCompat {
             if (!forResult) {
                 context.startActivity(intent);
             } else {
-                if (activity != null) {//为什么打开权限设置页就执行了onActivityResult？
+                //为什么打开权限设置页就执行了onActivityResult？
+                if (activity != null) {
                     activity.startActivityForResult(intent, REQUEST_CODE_SYSTEM_WINDOW);
                 }
             }

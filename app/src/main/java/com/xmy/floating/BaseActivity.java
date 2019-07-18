@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -23,7 +24,6 @@ import androidx.core.content.ContextCompat;
 import com.xmy.floating.floatlibrary.widget.FloatViewListener;
 import com.xmy.floating.floatlibrary.FloatWindowManager;
 import com.xmy.floating.floatlibrary.widget.IFloatView;
-import com.xmy.floating.floatlibrary.permission.FloatWinPermissionCompat;
 
 /**
  * Description:Activity基类
@@ -185,10 +185,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void checkPermissionAndShow() {
-        // 检查是否已经授权
-        if (FloatWinPermissionCompat.getInstance().check(mContext)) {
-            showFloatWindowDelay();
-        } else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             // 授权提示
             new AlertDialog.Builder(mContext).setTitle("悬浮窗权限未开启")
                     .setMessage("你的手机没有授权" + mContext.getString(R.string.app_name) + "获得悬浮窗权限，视频悬浮窗功能将无法正常使用")
@@ -196,14 +193,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // 显示授权界面
-                            try {
-                                FloatWinPermissionCompat.getInstance().apply(mContext);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION));
                         }
                     })
                     .setNegativeButton("取消", null).show();
+
+        } else {
+            showFloatWindowDelay();
         }
     }
 
