@@ -177,8 +177,7 @@ public class FloatWindowManager {
      * @param mContext
      * @return
      */
-    private FloatViewParams initFloatViewParams(Context mContext) {
-        FloatViewParams params = new FloatViewParams();
+    private synchronized FloatViewParams initFloatViewParams(final Context mContext) {
         int screenWidth = SystemUtils.getScreenWidth(mContext);
         int screenHeight = SystemUtils.getScreenHeight(mContext, false);
         int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
@@ -192,48 +191,33 @@ public class FloatWindowManager {
         int winWidth = LastWindowInfo.getInstance().getWidth();
         int winHeight = LastWindowInfo.getInstance().getHeight();
         int margin = SystemUtils.dip2px(mContext, 15);
-//        int width;
-//        if (winWidth <= winHeight) {
-//            //竖屏比例
-//            width = (int) (screenWidth * 1.0f * 1 / 3) + margin;
-//        } else {
-//            //横屏比例
-//            width = (int) (screenWidth * 1.0f / 2) + margin;
-//        }
-//        float ratio = 1.0f * winHeight / winWidth;
-//        int height = (int) (width * ratio);
 
-        int width = FloatView.w;
+        int width = childFloatView.getLayoutParams().width;
         float ratio = 1.0f * winHeight / winWidth;
-        int height = FloatView.h;
+        int height = childFloatView.getLayoutParams().height;
 
         //如果上次的位置不为null，则用上次的位置
-        FloatViewParams lastParams = livePlayerWrapper.getLastParams();
-        if (lastParams != null) {
-            params.width = lastParams.width;
-            params.height = lastParams.height;
-            params.x = lastParams.x;
-            params.y = lastParams.y;
-            params.contentWidth = lastParams.contentWidth;
-        } else {
-            params.width = width;
-            params.height = height;
-            params.x = screenWidth - width;
-            params.y = screenHeight - height - marginBottom;
-            params.contentWidth = width;
+        floatViewParams = livePlayerWrapper.getLastParams();
+        if (floatViewParams == null) {
+            floatViewParams = new FloatViewParams();
+            floatViewParams.width = width;
+            floatViewParams.height = height;
+            floatViewParams.x = screenWidth - width;
+            floatViewParams.y = screenHeight - height - marginBottom;
+            floatViewParams.contentWidth = width;
         }
-        params.screenWidth = screenWidth;
-        params.screenHeight = screenHeight;
-        params.statusBarHeight = statusBarHeight;
+        floatViewParams.screenWidth = screenWidth;
+        floatViewParams.screenHeight = screenHeight;
+        floatViewParams.statusBarHeight = statusBarHeight;
         if (floatWindowType == FW_TYPE_ROOT_VIEW) {
-            initTitleBarHeight(params, statusBarHeight);
+            initTitleBarHeight(floatViewParams, statusBarHeight);
             //params.screenHeight = screenHeight - statusBarHeight;
         }
-        params.viewMargin = margin;
-        params.mMaxWidth = screenWidth / 2 + margin;
-        params.mMinWidth = width;
-        params.mRatio = ratio;
-        return params;
+        floatViewParams.viewMargin = margin;
+        floatViewParams.mMaxWidth = screenWidth / 2 + margin;
+        floatViewParams.mMinWidth = width;
+        floatViewParams.mRatio = ratio;
+        return floatViewParams;
     }
 
     /**

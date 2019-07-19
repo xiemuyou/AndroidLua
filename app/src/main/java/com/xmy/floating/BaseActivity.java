@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,6 +38,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     private RequestPermissionCallBack mRequestPermissionCallBack;
     protected int floatWindowType = 0;
     private FloatWindowManager floatWindowManager;
+    private final Runnable floatWindowRunnable = new Runnable() {
+        @Override
+        public void run() {
+            showFloatWindow();
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,26 +112,15 @@ public abstract class BaseActivity extends AppCompatActivity {
         destroyWindow();
     }
 
-    /***---------------------------float window start---------------------------**/
-    private final Runnable floatWindowRunnable = new Runnable() {
-        @Override
-        public void run() {
-            showFloatWindow();
-        }
-    };
-
     /**
      * 显示悬浮窗
      */
     protected void showFloatWindow() {
         closeFloatWindow();//如果要显示多个悬浮窗，可以不关闭，这里只显示一个
-
-        ImageView floatView = new ImageView(this);
+        final ImageView floatView = new ImageView(this);
         floatView.setImageResource(R.mipmap.float_bg);
-        //floatView.setBackgroundColor(Color.parseColor("#FF00FF"));
         floatView.setLayoutParams(new ViewGroup.LayoutParams(150, 150));
-
-        floatWindowManager.showFloatWindow(this, floatWindowType, floatView);
+        floatWindowManager.showFloatWindow(BaseActivity.this, floatWindowType, floatView);
         addFloatWindowClickListener();
     }
 

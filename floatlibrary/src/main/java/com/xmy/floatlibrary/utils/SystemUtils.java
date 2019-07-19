@@ -1,16 +1,15 @@
 package com.xmy.floatlibrary.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
-import android.view.Display;
-import android.view.KeyCharacterMap;
-import android.view.KeyEvent;
-import android.view.ViewConfiguration;
-import android.view.WindowManager;
+import android.view.*;
+import androidx.appcompat.widget.ViewUtils;
 
 import java.lang.reflect.Field;
 
@@ -18,7 +17,7 @@ import java.lang.reflect.Field;
  * Description:工具类
  *
  * @author 杜乾-Dusan,Created on 2018/2/9 - 16:11.
- *         E-mail:duqian2010@gmail.com
+ * E-mail:duqian2010@gmail.com
  */
 public class SystemUtils {
 
@@ -40,8 +39,7 @@ public class SystemUtils {
         if (mContext == null) {
             return 0;
         }
-        int screenWidth = mContext.getResources().getDisplayMetrics().widthPixels;
-        return screenWidth;
+        return mContext.getResources().getDisplayMetrics().widthPixels;
     }
 
     /**
@@ -69,12 +67,10 @@ public class SystemUtils {
         if (screenHeight > 0) {
             return screenHeight;
         }
-
         if (mContext == null) {
             return 0;
         }
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        //WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         Display display = getWindowManager(mContext).getDefaultDisplay();
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -88,7 +84,6 @@ public class SystemUtils {
         }
         return screenHeight;
     }
-
 
     /**
      * 获取WindowManager。
@@ -183,5 +178,45 @@ public class SystemUtils {
             statusBarHeight = SystemUtils.dip2px(mContext, 30);
         }
         return statusBarHeight;
+    }
+
+    public static int getScreenHeight(View view) {
+        setScreenWidthOrHeight(view);
+        return screenHeight;
+    }
+
+    public static int getScreenWidth(View view) {
+        setScreenWidthOrHeight(view);
+        return screenWidth;
+    }
+
+    private static void setScreenWidthOrHeight(View view) {
+        View rootView = (View) view.getParent();
+        int w, h;
+        if (rootView != null) {
+            w = rootView.getWidth();
+            h = rootView.getHeight();
+        } else {
+            w = screenWidth;
+            h = screenHeight;
+        }
+        int max = Math.max(w, h);
+        int min = Math.min(w, h);
+        boolean isLandscape = isLandscape(view);
+        Log.d("AAAAAAAA", isLandscape ? "横屏" : "竖屏");
+        screenHeight = isLandscape ? min : max;
+        screenWidth = isLandscape ? max : min;
+        Log.d("AAAAAAAA", "screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
+    }
+
+    /**
+     * 判断是横屏还是竖屏
+     *
+     * @return 横屏true/竖屏false
+     */
+    private static boolean isLandscape(View view) {
+        Configuration mConfiguration = (view != null && view.getResources() != null) ? view.getResources().getConfiguration() : null;
+        //屏幕方向 == 横屏
+        return mConfiguration != null && mConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE;
     }
 }

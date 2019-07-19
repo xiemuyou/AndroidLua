@@ -4,13 +4,14 @@ package com.xmy.floatlibrary.widget;
  * Description:记录悬浮窗的宽高，坐标等信息
  *
  * @author 杜乾-Dusan,Created on 2018/1/24 - 10:28.
- *         E-mail:duqian2010@gmail.com
+ * E-mail:duqian2010@gmail.com
  */
 public class FloatViewParams {
     public int width;//窗口的宽
     public int height;//窗口的高
     public int x;//窗口的x坐标
     public int y;//窗口的y坐标
+    public boolean isLeft;//窗口的y坐标
     public int contentWidth;//当前窗口content view的宽度
 
     public int screenWidth;//屏幕宽度

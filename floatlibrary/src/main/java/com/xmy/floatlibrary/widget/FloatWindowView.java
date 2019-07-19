@@ -2,13 +2,11 @@ package com.xmy.floatlibrary.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.*;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import com.xmy.floatlibrary.utils.SystemUtils;
 
 /**
@@ -63,9 +61,6 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
-//        contentWrap = new ImageView(getContext());
-//        contentWrap.setBackgroundColor(Color.parseColor("#FF00FF"));
-//        contentWrap.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         contentWrap.setOnTouchListener(onMovingTouchListener);
         final int lastViewWidth = params.contentWidth;
         final int lastViewHeight = (int) (lastViewWidth * mRatio);
