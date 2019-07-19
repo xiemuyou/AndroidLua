@@ -24,7 +24,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".FloatActivity"/>
-        <activity android:name=".activity.SubAActivity"/>
+        <activity android:name=".activity.SubAActivity"
+                  android:theme="@style/Theme.AppCompat.NoActionBar"/>
         <activity android:name=".activity.SubBActivity"/>
         <activity android:name=".activity.SubCActivity"/>
     </application>

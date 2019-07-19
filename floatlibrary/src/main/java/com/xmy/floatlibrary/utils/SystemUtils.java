@@ -203,10 +203,8 @@ public class SystemUtils {
         int max = Math.max(w, h);
         int min = Math.min(w, h);
         boolean isLandscape = isLandscape(view);
-        Log.d("AAAAAAAA", isLandscape ? "横屏" : "竖屏");
         screenHeight = isLandscape ? min : max;
         screenWidth = isLandscape ? max : min;
-        Log.d("AAAAAAAA", "screenWidth=" + screenWidth + ";screenHeight=" + screenHeight);
     }
 
     /**
@@ -214,7 +212,7 @@ public class SystemUtils {
      *
      * @return 横屏true/竖屏false
      */
-    private static boolean isLandscape(View view) {
+    public static boolean isLandscape(View view) {
         Configuration mConfiguration = (view != null && view.getResources() != null) ? view.getResources().getConfiguration() : null;
         //屏幕方向 == 横屏
         return mConfiguration != null && mConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE;
