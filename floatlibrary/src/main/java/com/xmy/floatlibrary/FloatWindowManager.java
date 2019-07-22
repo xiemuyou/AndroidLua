@@ -36,6 +36,7 @@ public class FloatWindowManager {
     private WindowManager windowManager;
     private LastWindowInfo livePlayerWrapper;
     private Activity activity;
+    private View.OnClickListener mListener;
 
     public FloatWindowManager() {
         livePlayerWrapper = LastWindowInfo.getInstance();
@@ -44,11 +45,12 @@ public class FloatWindowManager {
     /**
      * 显示悬浮窗口
      */
-    public synchronized void showFloatWindow(Activity baseActivity, int floatWindowType, View floatView) {
+    public synchronized void showFloatWindow(Activity baseActivity, int floatWindowType, View floatView, View.OnClickListener listener) {
         if (baseActivity == null) {
             return;
         }
         activity = baseActivity;
+        mListener = listener;
         Context mContext = baseActivity.getApplicationContext();
         showFloatWindow(mContext, floatWindowType, floatView);
     }
@@ -95,6 +97,7 @@ public class FloatWindowManager {
         }
         try {
             floatView = new FloatView(mContext, floatViewParams, childFloatView);
+            ((FloatView) floatView).setOnClickListener(mListener);
             View rootView = activity.getWindow().getDecorView().getRootView();
             contentView = rootView.findViewById(android.R.id.content);
             int[] loc = SystemUtils.getViewLocationFormXY(contentView);

@@ -120,7 +120,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         final ImageView floatView = new ImageView(this);
         floatView.setImageResource(R.mipmap.float_bg);
         floatView.setLayoutParams(new ViewGroup.LayoutParams(150, 150));
-        floatWindowManager.showFloatWindow(BaseActivity.this, floatWindowType, floatView);
+        floatWindowManager.showFloatWindow(BaseActivity.this, floatWindowType, floatView, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(BaseActivity.this, "点击", Toast.LENGTH_SHORT).show();
+            }
+        });
         addFloatWindowClickListener();
     }
 

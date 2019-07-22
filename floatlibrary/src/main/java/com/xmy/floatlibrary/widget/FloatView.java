@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import com.xmy.floatlibrary.utils.SystemUtils;
 
 /**
@@ -91,8 +92,9 @@ public class FloatView extends FrameLayout implements IFloatView {
                     updateViewPosition(true);
                     tx = ty = 0;
                     if ((x - mSx) < 5 && (y - mSy) < 5 && xj < 7) {
-                        Toast.makeText(getContext(), "点击", Toast.LENGTH_SHORT).show();
-                        //imageClick(context);
+                        if (mListener != null) {
+                            mListener.onClick(FloatView.this);
+                        }
                     }
                     break;
 
@@ -102,6 +104,13 @@ public class FloatView extends FrameLayout implements IFloatView {
             return true;
         }
     };
+
+    private OnClickListener mListener;
+
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+        mListener = l;
+    }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
