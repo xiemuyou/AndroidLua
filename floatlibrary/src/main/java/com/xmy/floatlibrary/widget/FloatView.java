@@ -21,30 +21,36 @@ import com.xmy.floatlibrary.utils.SystemUtils;
 @SuppressLint("ViewConstructor")
 public class FloatView extends FrameLayout implements IFloatView {
 
-    private Context mContext;
-    private View floatView;
-    private FloatViewParams params;
-    private FloatViewListener mListener;
+    protected View floatView;
+    protected FloatViewParams params;
+    protected FloatViewListener mListener;
 
     private float x;
     private float y;
-    private float tx;
-    private float ty;
+    protected float tx;
+    protected float ty;
     private float sx;
     private float sy;
     private float mSx;
     private float mSy;
     private float xj;
 
+    protected float xInScreen;
+    protected float yInScreen;
+
+    public FloatView(@NonNull Context context) {
+        super(context);
+        init();
+    }
+
     public FloatView(@NonNull Context context, @NonNull FloatViewParams params, @NonNull View childView) {
         super(context);
         this.params = params;
         this.floatView = childView;
-        init(mContext);
+        init();
     }
 
-    private void init(@NonNull Context context) {
-        mContext = context;
+    protected void init() {
         if (floatView == null) {
             throw new RuntimeException("FloatView is null!");
         }
@@ -53,7 +59,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private final OnTouchListener onMovingTouchListener = new OnTouchListener() {
+    protected final OnTouchListener onMovingTouchListener = new OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -75,12 +81,18 @@ public class FloatView extends FrameLayout implements IFloatView {
                     sx = event.getRawX();
                     sy = event.getRawY();
                     xj = 0;
+
+                    xInScreen = sx;
+                    yInScreen = sy;
                     break;
 
                 // 捕获手指触摸移动动作
                 case MotionEvent.ACTION_MOVE:
                     float rx = event.getRawX();
                     float ry = event.getRawY();
+
+                    xInScreen = event.getRawX();
+                    yInScreen = event.getRawY();
                     xj = Math.max(Math.abs(rx - sx), Math.abs(xj));
                     xj = Math.max(Math.abs(ry - sy), Math.abs(xj));
                     updateViewPosition(false);
@@ -107,7 +119,9 @@ public class FloatView extends FrameLayout implements IFloatView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        floatLayout(params.x, params.y, true);
+        if (params != null) {
+            floatLayout(params.x, params.y, true);
+        }
     }
 
     /**
@@ -117,13 +131,15 @@ public class FloatView extends FrameLayout implements IFloatView {
         // 更新浮动窗口位置参数
         int left = (int) (x - tx);
         int top = (int) (y - ty);
-        int maxLeft = SystemUtils.getScreenWidth(this);
-        params.isLeft = left < maxLeft / 2;
-        floatLayout(left, top, isRefresh);
+        if (!updateViewPosition()) {
+            int maxLeft = SystemUtils.getScreenWidth(this);
+            params.isLeft = left < maxLeft / 2;
+            floatLayout(left, top, isRefresh);
+        }
     }
 
     private void floatLayout(int left, int top, boolean isRefresh) {
-        if (floatView == null) {
+        if (floatView == null || updateViewPosition()) {
             return;
         }
         if (isRefresh) {
@@ -142,6 +158,13 @@ public class FloatView extends FrameLayout implements IFloatView {
         int right = left + floatView.getWidth();
         int bottom = top + floatView.getHeight();
         floatView.layout(left, top, right, bottom);
+    }
+
+    /**
+     * 更新窗体坐标位置
+     */
+    protected boolean updateViewPosition() {
+        return false;
     }
 
     @Override
