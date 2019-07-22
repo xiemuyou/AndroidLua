@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     protected View floatView;
     protected FloatViewParams params;
     protected FloatViewListener mListener;
+    protected WindowManager.LayoutParams mWindowParams = null;
 
     private float x;
     private float y;
@@ -119,7 +121,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (params != null) {
+        if (mWindowParams == null && params != null) {
             floatLayout(params.x, params.y, true);
         }
     }

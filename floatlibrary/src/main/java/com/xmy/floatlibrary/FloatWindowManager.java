@@ -100,6 +100,7 @@ public class FloatWindowManager {
             int[] loc = SystemUtils.getViewLocationFormXY(contentView);
             floatViewParams.actionBarHeight = loc[1];
             contentView.addView((View) floatView);
+            Log.d("aaaaa", "0,X=" + floatViewParams.x + "; Y=" + floatViewParams.y);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,6 +141,7 @@ public class FloatWindowManager {
         wmParams.height = floatViewParams.height;
         wmParams.x = floatViewParams.x;
         wmParams.y = floatViewParams.y;
+        Log.d("aaaaa", "1,X=" + wmParams.x + "; Y=" + wmParams.y);
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams, childFloatView);
         try {
             windowManager.addView((View) floatView, wmParams);

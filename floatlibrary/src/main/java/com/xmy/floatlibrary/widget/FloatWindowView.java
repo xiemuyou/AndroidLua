@@ -1,6 +1,7 @@
 package com.xmy.floatlibrary.widget;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.*;
 import com.xmy.floatlibrary.utils.SystemUtils;
 
@@ -13,7 +14,6 @@ import com.xmy.floatlibrary.utils.SystemUtils;
 public class FloatWindowView extends FloatView {
 
     private WindowManager mWindowManager = null;
-    private WindowManager.LayoutParams mWindowParams = null;
     /***初始宽度**/
     private int mMinWidth;
 
@@ -22,16 +22,19 @@ public class FloatWindowView extends FloatView {
         initWindowView();
     }
 
+    @Override
+    protected void init() {
+    }
+
     public FloatWindowView(Context mContext, FloatViewParams floatViewParams, WindowManager.LayoutParams wmParams, View floatView) {
         super(mContext);
+        if (floatView == null || wmParams == null) {
+            throw new RuntimeException("floatView end wmParams NonNull!!");
+        }
         this.params = floatViewParams;
         this.mWindowParams = wmParams;
         this.floatView = floatView;
         initWindowView();
-    }
-
-    @Override
-    protected void init() {
     }
 
     protected void initWindowView() {
@@ -44,10 +47,19 @@ public class FloatWindowView extends FloatView {
         final int lastViewHeight = (int) (lastViewWidth * mRatio);
         updateViewLayoutParams(lastViewWidth, lastViewHeight);
         addView(floatView);
+        Log.d("aaaaa", "2,X=" + mWindowParams.x + "; Y=" + mWindowParams.y);
         floatView.post(new Runnable() {
             @Override
             public void run() {
-                updateWindowWidthAndHeight(lastViewWidth, lastViewHeight);
+                //更新WM的宽高大小
+                if (mWindowManager != null) {
+                    mWindowParams.width = lastViewWidth;
+                    mWindowParams.height = lastViewHeight;
+                    mWindowParams.x = params.x;
+                    mWindowParams.y = params.y;
+                    Log.d("aaaaa", "3,X=" + mWindowParams.x + "; Y=" + mWindowParams.y);
+                    mWindowManager.updateViewLayout(FloatWindowView.this, mWindowParams);
+                }
             }
         });
     }
@@ -63,17 +75,6 @@ public class FloatWindowView extends FloatView {
 
     public int getContentViewWidth() {
         return floatView != null ? floatView.getWidth() : mMinWidth;
-    }
-
-    /**
-     * 更新WM的宽高大小
-     */
-    private synchronized void updateWindowWidthAndHeight(int width, int height) {
-        if (mWindowManager != null) {
-            mWindowParams.width = width;
-            mWindowParams.height = height;
-            mWindowManager.updateViewLayout(this, mWindowParams);
-        }
     }
 
     /**
