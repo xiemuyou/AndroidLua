@@ -125,7 +125,7 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
             //Logger.d("dq-fw canClick=" + canClick);
             if (countClick == 1 && canClick) {
                 if (listener != null) {
-                    listener.onClick();
+                    listener.onClick(FloatWindowView.this);
                 }
             }
             countClick = 0;
@@ -176,10 +176,6 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
                     } else if (countClick == 2) {
                         long secondClickTime = System.currentTimeMillis();
                         if (secondClickTime - firstClickTime < 300) {
-                            //双击
-                            if (listener != null) {
-                                listener.onDoubleClick();
-                            }
                             scaleCount++;
                             handleScaleEvent();
                             countClick = 0;
@@ -190,9 +186,9 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
                         }
                     }
                 } else {
-                    if (null != listener) {
-                        listener.onMoved();
-                    }
+//                    if (null != listener) {
+//                        listener.onMoved();
+//                    }
                     countClick = 0;
                 }
                 isMoving = false;

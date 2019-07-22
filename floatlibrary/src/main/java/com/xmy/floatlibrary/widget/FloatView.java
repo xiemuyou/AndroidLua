@@ -9,9 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import android.widget.Toast;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import com.xmy.floatlibrary.utils.SystemUtils;
 
 /**
@@ -26,6 +24,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     private Context mContext;
     private View floatView;
     private FloatViewParams params;
+    private FloatViewListener mListener;
 
     private float x;
     private float y;
@@ -105,13 +104,6 @@ public class FloatView extends FrameLayout implements IFloatView {
         }
     };
 
-    private OnClickListener mListener;
-
-    @Override
-    public void setOnClickListener(OnClickListener l) {
-        mListener = l;
-    }
-
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
@@ -138,7 +130,6 @@ public class FloatView extends FrameLayout implements IFloatView {
             //最小边距
             int minMargin = 5;
             left = params.isLeft ? minMargin : SystemUtils.getScreenWidth(this) - floatView.getWidth() - minMargin;
-
             int maxTop = SystemUtils.getScreenHeight(this) - floatView.getHeight();
             if (top < minMargin) {
                 top = minMargin;
@@ -160,7 +151,7 @@ public class FloatView extends FrameLayout implements IFloatView {
 
     @Override
     public void setFloatViewListener(FloatViewListener listener) {
-
+        mListener = listener;
     }
 
     private static final String TAG = "FloatView";

@@ -36,7 +36,6 @@ public class FloatWindowManager {
     private WindowManager windowManager;
     private LastWindowInfo livePlayerWrapper;
     private Activity activity;
-    private View.OnClickListener mListener;
 
     public FloatWindowManager() {
         livePlayerWrapper = LastWindowInfo.getInstance();
@@ -45,12 +44,11 @@ public class FloatWindowManager {
     /**
      * 显示悬浮窗口
      */
-    public synchronized void showFloatWindow(Activity baseActivity, int floatWindowType, View floatView, View.OnClickListener listener) {
+    public synchronized void showFloatWindow(Activity baseActivity, int floatWindowType, View floatView) {
         if (baseActivity == null) {
             return;
         }
         activity = baseActivity;
-        mListener = listener;
         Context mContext = baseActivity.getApplicationContext();
         showFloatWindow(mContext, floatWindowType, floatView);
     }
@@ -97,7 +95,6 @@ public class FloatWindowManager {
         }
         try {
             floatView = new FloatView(mContext, floatViewParams, childFloatView);
-            ((FloatView) floatView).setOnClickListener(mListener);
             View rootView = activity.getWindow().getDecorView().getRootView();
             contentView = rootView.findViewById(android.R.id.content);
             int[] loc = SystemUtils.getViewLocationFormXY(contentView);
@@ -139,41 +136,23 @@ public class FloatWindowManager {
         }
         wmParams.format = PixelFormat.RGBA_8888;
         wmParams.gravity = Gravity.START | Gravity.TOP;
-
         wmParams.width = floatViewParams.width;
         wmParams.height = floatViewParams.height;
         wmParams.x = floatViewParams.x;
         wmParams.y = floatViewParams.y;
-
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams, childFloatView);
-        //监听关闭悬浮窗
-        floatView.setFloatViewListener(new FloatViewListener() {
-
-            @Override
-            public void onClose() {
-                dismissFloatWindow();
-            }
-
-            @Override
-            public void onClick() {
-
-            }
-
-            @Override
-            public void onMoved() {
-
-            }
-
-            @Override
-            public void onDragged() {
-
-            }
-        });
         try {
             windowManager.addView((View) floatView, wmParams);
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setFloatClickListener(FloatViewListener clickListener) {
+        if (clickListener == null || floatView == null) {
+            return;
+        }
+        floatView.setFloatViewListener(clickListener);
     }
 
     /**

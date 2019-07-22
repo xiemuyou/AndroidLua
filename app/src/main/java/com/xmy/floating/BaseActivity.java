@@ -120,12 +120,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         final ImageView floatView = new ImageView(this);
         floatView.setImageResource(R.mipmap.float_bg);
         floatView.setLayoutParams(new ViewGroup.LayoutParams(150, 150));
-        floatWindowManager.showFloatWindow(BaseActivity.this, floatWindowType, floatView, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BaseActivity.this, "点击", Toast.LENGTH_SHORT).show();
-            }
-        });
+        floatWindowManager.showFloatWindow(BaseActivity.this, floatWindowType, floatView);
         addFloatWindowClickListener();
     }
 
@@ -152,6 +147,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         //说明悬浮窗view创建了，增加屏幕常亮
         keepScreenOn();
         floatView.setFloatViewListener(new FloatViewListener() {
+
             @Override
             public void onClose() {
                 clearScreenOn();
@@ -159,14 +155,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onClick() {
+            public void onClick(View view) {
                 onFloatWindowClick();
                 mContext.startActivity(new Intent(mContext, MainActivity.class));
-            }
-
-            @Override
-            public void onDoubleClick() {
-                Toast.makeText(mContext, "onDoubleClick", Toast.LENGTH_LONG).show();
             }
         });
     }

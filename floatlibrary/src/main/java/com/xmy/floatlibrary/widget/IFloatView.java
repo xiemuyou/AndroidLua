@@ -1,5 +1,7 @@
 package com.xmy.floatlibrary.widget;
 
+import android.view.View;
+
 /**
  * Description:悬浮窗抽象方法
  *
