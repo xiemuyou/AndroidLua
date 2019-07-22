@@ -4,6 +4,7 @@ package com.xmy.floatlibrary.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -24,7 +25,6 @@ public class FloatView extends FrameLayout implements IFloatView {
     private Context mContext;
     private View floatView;
     private FloatViewParams params;
-    private boolean isActionBar = false;
 
     private float x;
     private float y;
@@ -50,20 +50,7 @@ public class FloatView extends FrameLayout implements IFloatView {
         }
         floatView.setOnTouchListener(onMovingTouchListener);
         addView(floatView);
-        post(runnable);
     }
-
-    private Runnable runnable = new Runnable() {
-
-        @Override
-        public void run() {
-            int y = (int) getPivotY();
-            int max = Math.max(params.screenHeight, params.screenWidth);
-            int min = Math.min(params.screenHeight, params.screenWidth);
-            int temp = (SystemUtils.isLandscape(floatView) ? min : max) - params.statusBarHeight;
-            isActionBar = (temp / 2) > y;
-        }
-    };
 
     @SuppressLint("ClickableViewAccessibility")
     private final OnTouchListener onMovingTouchListener = new OnTouchListener() {
@@ -73,12 +60,10 @@ public class FloatView extends FrameLayout implements IFloatView {
             //获取到状态栏的高度?
             Rect frame = new Rect();
             floatView.getWindowVisibleDisplayFrame(frame);
-            // statusBarHeight是系统状态栏的高度
-            int statusBarHeight = frame.top;
             // 获取相对屏幕的坐标，即以屏幕左上角为原点
             x = (int) event.getRawX();
-            int ah = isActionBar ? SystemUtils.getStatusBarHeight(getContext()) : 0;
-            y = (int) (event.getRawY() - statusBarHeight - ah);
+            y = (int) (event.getRawY() - params.actionBarHeight);
+            log(params.actionBarHeight);
             switch (event.getAction()) {
                 // 捕获手指触摸按下动作
                 case MotionEvent.ACTION_DOWN:
@@ -167,5 +152,11 @@ public class FloatView extends FrameLayout implements IFloatView {
     @Override
     public void setFloatViewListener(FloatViewListener listener) {
 
+    }
+
+    private static final String TAG = "FloatView";
+
+    private void log(Object log) {
+        Log.d(TAG, log.toString());
     }
 }

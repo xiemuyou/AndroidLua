@@ -1,14 +1,17 @@
 package com.xmy.floatlibrary.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.*;
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ViewUtils;
 
 import java.lang.reflect.Field;
@@ -216,5 +219,30 @@ public class SystemUtils {
         Configuration mConfiguration = (view != null && view.getResources() != null) ? view.getResources().getConfiguration() : null;
         //屏幕方向 == 横屏
         return mConfiguration != null && mConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE;
+    }
+
+    /**
+     * 获取系统状态栏高度
+     *
+     * @param context Activity
+     * @return ActionBar 高度
+     */
+    public static int getActionBarHeight(@NonNull Activity context) {
+        TypedArray actionBarSizeArray = context.obtainStyledAttributes(new int[]{
+                android.R.attr.actionBarSize
+        });
+        int actionBarHeight = (int) actionBarSizeArray.getDimension(0, 0);
+        actionBarSizeArray.recycle();
+        return actionBarHeight;
+    }
+
+    public static int[] getViewLocationFormXY(View view) {
+        int[] location = new int[2];
+        //获取在当前窗口内的绝对坐标
+        view.getLocationInWindow(location);
+        //获取在整个屏幕内的绝对坐标
+        //view.getLocationOnScreen(location);
+        //location[1] -= getStatusBarHeight(view);
+        return location;
     }
 }

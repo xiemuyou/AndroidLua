@@ -9,7 +9,7 @@ import com.xmy.floating.activity.SubAActivity;
 import com.xmy.floatlibrary.FloatWindowManager;
 
 /**
- * description:Demo展示用法。todo 目前发现显示actionBar的情况下缩放有bug
+ * description:Demo展示用法。
  *
  * @author 杜小菜 Created on 2019-05-09 - 10:45.
  * E-mail:duqian2010@gmail.com

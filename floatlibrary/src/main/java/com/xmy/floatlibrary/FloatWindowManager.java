@@ -97,6 +97,8 @@ public class FloatWindowManager {
             floatView = new FloatView(mContext, floatViewParams, childFloatView);
             View rootView = activity.getWindow().getDecorView().getRootView();
             contentView = rootView.findViewById(android.R.id.content);
+            int[] loc = SystemUtils.getViewLocationFormXY(contentView);
+            floatViewParams.actionBarHeight = loc[1];
             contentView.addView((View) floatView);
         } catch (Exception e) {
             e.printStackTrace();

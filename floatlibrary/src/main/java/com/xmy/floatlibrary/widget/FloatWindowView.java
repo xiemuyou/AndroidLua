@@ -116,8 +116,9 @@ public class FloatWindowView extends FrameLayout implements IFloatView {
         }
     };
 
-    private long firstClickTime;//第一次点击
+    //第一次点击
     private int countClick = 0;
+    private long firstClickTime;
     private final Runnable clickRunnable = new Runnable() {
         @Override
         public void run() {

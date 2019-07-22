@@ -23,5 +23,7 @@ public class FloatViewParams {
     public int viewMargin;//悬浮窗距离父view的边距
 
     public int titleBarHeight;//标题栏高度
+    public int actionBarHeight;//标题栏高度
+    public boolean isActionBar;//标题栏高度
 
 }
