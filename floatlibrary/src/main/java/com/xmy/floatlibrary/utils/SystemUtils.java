@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.ViewUtils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Description:工具类
@@ -175,6 +176,25 @@ public class SystemUtils {
         return statusBarHeight;
     }
 
+    /**
+     * 获取系统状态栏高度
+     *
+     * @param activity Activity
+     * @return 状态栏高度
+     */
+    public static int getStatusBarHeight(Activity activity) {
+        try {
+            Class<?> clazz = Class.forName("com.android.internal.R$dimen");
+            Object object = clazz.newInstance();
+            Field field = clazz.getField("status_bar_height");
+            int dpHeight = Integer.parseInt(field.get(object).toString());
+            return activity.getResources().getDimensionPixelSize(dpHeight);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+            return 0;
+        }
+    }
+
     public static int getStatusBarHeight(Context mContext) {
         int statusBarHeight = getStatusBarHeightByReflect(mContext);
         if (statusBarHeight == 0) {
@@ -244,5 +264,24 @@ public class SystemUtils {
         //view.getLocationOnScreen(location);
         //location[1] -= getStatusBarHeight(view);
         return location;
+    }
+
+    public static int[] getNotchSize(Context context) {
+        int[] ret = new int[]{0, 0};
+        try {
+            ClassLoader cl = context.getClassLoader();
+            Class HwNotchSizeUtil = cl.loadClass("com.huawei.android.util.HwNotchSizeUtil");
+            Method get = HwNotchSizeUtil.getMethod("getNotchSize");
+            ret = (int[]) get.invoke(HwNotchSizeUtil);
+        } catch (ClassNotFoundException e) {
+            Log.e("test", "getNotchSize ClassNotFoundException");
+        } catch (NoSuchMethodException e) {
+            Log.e("test", "getNotchSize NoSuchMethodException");
+        } catch (Exception e) {
+            Log.e("test", "getNotchSize Exception");
+        } finally {
+            return ret;
+
+        }
     }
 }

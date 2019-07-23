@@ -1,7 +1,6 @@
 package com.xmy.floatlibrary.widget;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.*;
 import com.xmy.floatlibrary.utils.SystemUtils;
 
@@ -47,7 +46,6 @@ public class FloatWindowView extends FloatView {
         final int lastViewHeight = (int) (lastViewWidth * mRatio);
         updateViewLayoutParams(lastViewWidth, lastViewHeight);
         addView(floatView);
-        Log.d("aaaaa", "2,X=" + mWindowParams.x + "; Y=" + mWindowParams.y);
         floatView.post(new Runnable() {
             @Override
             public void run() {
@@ -57,7 +55,6 @@ public class FloatWindowView extends FloatView {
                     mWindowParams.height = lastViewHeight;
                     mWindowParams.x = params.x;
                     mWindowParams.y = params.y;
-                    Log.d("aaaaa", "3,X=" + mWindowParams.x + "; Y=" + mWindowParams.y);
                     mWindowManager.updateViewLayout(FloatWindowView.this, mWindowParams);
                 }
             }
@@ -82,13 +79,15 @@ public class FloatWindowView extends FloatView {
      */
     @Override
     protected boolean updateViewPosition() {
-        int x = (int) (xInScreen - tx);
-        int y = (int) (yInScreen - ty);
-        //防止超出通知栏
-        if (y < params.statusBarHeight) {
-            y = params.statusBarHeight;
+        int left = (int) (x - tx);
+        int top = (int) (y - ty);
+        if (isRefresh) {
+            int[] notchSize = SystemUtils.getNotchSize(getContext());
+            if (top < notchSize[0]) {
+                top = notchSize[1];
+            }
         }
-        updateWindowPosition(x, y);
+        updateWindowPosition(left, top);
         return true;
     }
 

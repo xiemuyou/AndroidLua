@@ -100,7 +100,6 @@ public class FloatWindowManager {
             int[] loc = SystemUtils.getViewLocationFormXY(contentView);
             floatViewParams.actionBarHeight = loc[1];
             contentView.addView((View) floatView);
-            Log.d("aaaaa", "0,X=" + floatViewParams.x + "; Y=" + floatViewParams.y);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -141,7 +140,6 @@ public class FloatWindowManager {
         wmParams.height = floatViewParams.height;
         wmParams.x = floatViewParams.x;
         wmParams.y = floatViewParams.y;
-        Log.d("aaaaa", "1,X=" + wmParams.x + "; Y=" + wmParams.y);
         floatView = new FloatWindowView(mContext, floatViewParams, wmParams, childFloatView);
         try {
             windowManager.addView((View) floatView, wmParams);
@@ -166,7 +164,7 @@ public class FloatWindowManager {
     private synchronized FloatViewParams initFloatViewParams(final Context mContext) {
         int screenWidth = SystemUtils.getScreenWidth(mContext);
         int screenHeight = SystemUtils.getScreenHeight(mContext, false);
-        int statusBarHeight = SystemUtils.getStatusBarHeight(mContext);
+        int statusBarHeight = SystemUtils.getStatusBarHeight(activity);
         Log.d("dq", "screenWidth=" + screenWidth + ",screenHeight=" + screenHeight + ",statusBarHeight=" + statusBarHeight);
         //根据实际宽高和设计稿尺寸比例适应。
         int marginBottom = SystemUtils.dip2px(mContext, 150);

@@ -4,7 +4,6 @@ package com.xmy.floatlibrary.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,8 +26,8 @@ public class FloatView extends FrameLayout implements IFloatView {
     protected FloatViewListener mListener;
     protected WindowManager.LayoutParams mWindowParams = null;
 
-    private float x;
-    private float y;
+    protected float x;
+    protected float y;
     protected float tx;
     protected float ty;
     private float sx;
@@ -37,8 +36,7 @@ public class FloatView extends FrameLayout implements IFloatView {
     private float mSy;
     private float xj;
 
-    protected float xInScreen;
-    protected float yInScreen;
+    protected boolean isRefresh;
 
     public FloatView(@NonNull Context context) {
         super(context);
@@ -70,8 +68,7 @@ public class FloatView extends FrameLayout implements IFloatView {
             floatView.getWindowVisibleDisplayFrame(frame);
             // 获取相对屏幕的坐标，即以屏幕左上角为原点
             x = (int) event.getRawX();
-            y = (int) (event.getRawY() - params.actionBarHeight);
-            log(params.actionBarHeight);
+            y = (int) event.getRawY() - (mWindowParams == null ? params.actionBarHeight : 0);
             switch (event.getAction()) {
                 // 捕获手指触摸按下动作
                 case MotionEvent.ACTION_DOWN:
@@ -83,18 +80,12 @@ public class FloatView extends FrameLayout implements IFloatView {
                     sx = event.getRawX();
                     sy = event.getRawY();
                     xj = 0;
-
-                    xInScreen = sx;
-                    yInScreen = sy;
                     break;
 
                 // 捕获手指触摸移动动作
                 case MotionEvent.ACTION_MOVE:
                     float rx = event.getRawX();
                     float ry = event.getRawY();
-
-                    xInScreen = event.getRawX();
-                    yInScreen = event.getRawY();
                     xj = Math.max(Math.abs(rx - sx), Math.abs(xj));
                     xj = Math.max(Math.abs(ry - sy), Math.abs(xj));
                     updateViewPosition(false);
@@ -130,6 +121,7 @@ public class FloatView extends FrameLayout implements IFloatView {
      * 更新悬浮窗位置,此方法用于修正移动悬浮窗的边界问题，保证不移出应用可见范围
      */
     private synchronized void updateViewPosition(boolean isRefresh) {
+        this.isRefresh = isRefresh;
         // 更新浮动窗口位置参数
         int left = (int) (x - tx);
         int top = (int) (y - ty);
@@ -177,11 +169,5 @@ public class FloatView extends FrameLayout implements IFloatView {
     @Override
     public void setFloatViewListener(FloatViewListener listener) {
         mListener = listener;
-    }
-
-    private static final String TAG = "FloatView";
-
-    private void log(Object log) {
-        Log.d(TAG, log.toString());
     }
 }
